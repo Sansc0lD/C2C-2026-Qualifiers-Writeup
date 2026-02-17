@@ -52,8 +52,8 @@ For a detailed walkthrough, please refer to the full PDF write-up included in th
 In compliance with the C2C 2026 rules regarding AI Transparency, the following details adhere to the "New Rules" and "General AI Usage Policy" outlined in the competition guidelines.
 
 * **Did you use AI?** Yes
-* [cite_start]**Primary Model:** Gemini 3 Pro [cite: 18]
-* [cite_start]**Subscription Tier:** Google AI Pro Free for Student (via Google for Education) [cite: 19]
+* **Primary Model:** Gemini 3 Pro
+* **Subscription Tier:** Google AI Pro Free for Student (via Google for Education)
 
 **Methodology:**
 AI was strictly used as an accelerator, primarily for generating boilerplate code (e.g., `web3.py` connection templates, `pwntools` skeletons) and explaining specific library documentation or obfuscation logic. All exploits were manually verified, debugged, and executed. [cite_start]No flag was submitted blindly from AI output[cite: 20, 21, 22].
