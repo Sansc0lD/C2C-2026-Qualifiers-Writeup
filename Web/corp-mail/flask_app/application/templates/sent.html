@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Sent{% endblock %}
+
+{% block content %}
+<div class="email-container">
+    <div class="email-header">
+        <h1 class="page-title">Sent Mail</h1>
+        <p class="page-subtitle">{{ emails|length }} sent message{% if emails|length != 1 %}s{% endif %}</p>
+    </div>
+
+    <section class="panel email-list-panel">
+        <div class="panel-content">
+            {% if emails %}
+            <table class="email-table">
+                <thead>
+                    <tr>
+                        <th class="col-to">To</th>
+                        <th class="col-subject">Subject</th>
+                        <th class="col-date">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for email in emails %}
+                    <tr onclick="window.location='{{ url_for('user.view_email', email_id=email.id) }}'">
+                        <td class="col-to">
+                            <div class="sender-info">
+                                <span class="sender-avatar">{{ email.receiver_name[:2]|upper }}</span>
+                                <span class="sender-name">{{ email.receiver_name }}</span>
+                            </div>
+                        </td>
+                        <td class="col-subject">{{ email.subject }}</td>
+                        <td class="col-date">{{ email.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <span class="empty-icon">📤</span>
+                <p>No sent emails</p>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock %}

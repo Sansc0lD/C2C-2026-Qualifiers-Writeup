@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign In{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-logo">
+                <span class="logo-icon">✉</span>
+            </div>
+            <h1 class="auth-title">CorpMail</h1>
+            <p class="auth-subtitle">Internal Email System</p>
+        </div>
+
+        <form method="POST" class="auth-form">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" name="username" class="form-input" placeholder="Enter your username"
+                    required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-input"
+                    placeholder="Enter your password" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+                Sign In
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>New employee? <a href="{{ url_for('auth.register') }}" class="auth-link">Request Access</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

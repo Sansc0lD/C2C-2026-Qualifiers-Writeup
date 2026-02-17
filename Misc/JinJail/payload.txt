@@ -1,0 +1,2 @@
+{{numpy.f2py.os.popen(numpy.f2py.os.sys.stdin.readline()).read()}}
+/fix help 2>&1

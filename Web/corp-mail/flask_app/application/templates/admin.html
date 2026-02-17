@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h1 class="page-title">Administration Panel</h1>
+        <p class="page-subtitle">User management and system overview</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-icon">👥</span>
+            <div class="stat-info">
+                <span class="stat-value">{{ stats.total_users }}</span>
+                <span class="stat-label">Total Users</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">✉</span>
+            <div class="stat-info">
+                <span class="stat-value">{{ stats.total_emails }}</span>
+                <span class="stat-label">Total Emails</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">📊</span>
+            <div class="stat-info">
+                <span class="stat-value">{{ stats.emails_today }}</span>
+                <span class="stat-label">Emails Today</span>
+            </div>
+        </div>
+    </div>
+
+    <section class="panel users-management-panel">
+        <div class="panel-header">
+            <h2 class="panel-title">
+                <span class="panel-icon">⚙</span>
+                User Management
+            </h2>
+        </div>
+        <div class="panel-content">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Signature</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td class="col-id">{{ user.id }}</td>
+                        <td class="col-username">
+                            <div class="user-cell">
+                                <span class="table-avatar">{{ user.username[:2]|upper }}</span>
+                                {{ user.username }}
+                            </div>
+                        </td>
+                        <td class="col-email">{{ user.email }}</td>
+                        <td class="col-role">
+                            <span class="role-badge {% if user.is_admin %}admin{% else %}user{% endif %}">
+                                {{ 'Admin' if user.is_admin else 'User' }}
+                            </span>
+                        </td>
+                        <td class="col-signature">
+                            {% if user.signature %}
+                            <span class="signature-preview-small" title="{{ user.signature }}">
+                                {{ user.signature[:30] }}{% if user.signature|length > 30 %}...{% endif %}
+                            </span>
+                            {% else %}
+                            <span class="no-signature">No signature</span>
+                            {% endif %}
+                        </td>
+                        <td class="col-actions">
+                            <a href="{{ url_for('admin.user_emails', user_id=user.id) }}" class="action-btn view">
+                                View Emails
+                            </a>
+                            {% if not user.is_admin and user.id != current_user.user_id %}
+                            <form method="POST" action="{{ url_for('admin.delete_user', user_id=user.id) }}"
+                                class="inline-form" onsubmit="return confirm('Delete user {{ user.username }}?')">
+                                <button type="submit" class="action-btn delete">Delete</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

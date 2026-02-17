@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ email.subject }}{% endblock %}
+
+{% block content %}
+<div class="email-container">
+    <div class="email-header">
+        {% if is_admin_view %}
+        <a href="{{ url_for('admin.panel') }}" class="back-btn">← Back to Admin</a>
+        {% else %}
+        <a href="{{ url_for('user.inbox') }}" class="back-btn">← Back to Inbox</a>
+        {% endif %}
+    </div>
+
+    <section class="panel email-view-panel">
+        <div class="email-view-header">
+            <h1 class="email-subject">{{ email.subject }}</h1>
+            <div class="email-meta">
+                <div class="email-participants">
+                    <div class="participant">
+                        <span class="label">From:</span>
+                        <span class="sender-avatar">{{ email.sender_name[:2]|upper }}</span>
+                        <span class="value">{{ email.sender_name }} &lt;{{ email.sender_email }}&gt;</span>
+                    </div>
+                    <div class="participant">
+                        <span class="label">To:</span>
+                        <span class="sender-avatar small">{{ email.receiver_name[:2]|upper }}</span>
+                        <span class="value">{{ email.receiver_name }} &lt;{{ email.receiver_email }}&gt;</span>
+                    </div>
+                </div>
+                <div class="email-date">{{ email.created_at }}</div>
+            </div>
+        </div>
+        <div class="email-body">
+            <pre>{{ email.body }}</pre>
+        </div>
+    </section>
+</div>
+{% endblock %}

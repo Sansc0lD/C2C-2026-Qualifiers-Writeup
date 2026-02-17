@@ -1,0 +1,10 @@
+name: pwn-ns3
+services:
+  chall:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - GZCTF_FLAG=C2C{test_flag_is_here}
+    restart: always
+    container_name: ns3

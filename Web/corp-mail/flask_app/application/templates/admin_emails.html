@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Emails - {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <a href="{{ url_for('admin.panel') }}" class="back-btn">← Back to Admin</a>
+        <h1 class="page-title">Email History: {{ user.username }}</h1>
+        <p class="page-subtitle">Viewing all emails sent and received by this user</p>
+    </div>
+
+    <section class="panel emails-panel">
+        <div class="panel-header">
+            <h2 class="panel-title">
+                <span class="panel-icon">✉</span>
+                Emails ({{ emails|length }})
+            </h2>
+        </div>
+        <div class="panel-content">
+            {% if emails %}
+            <table class="admin-table emails-table">
+                <thead>
+                    <tr>
+                        <th>Direction</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Subject</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for email in emails %}
+                    <tr onclick="window.location='{{ url_for('admin.view_email', email_id=email.id) }}'"
+                        style="cursor: pointer;">
+                        <td class="col-direction">
+                            <span
+                                class="direction-badge {% if email.sender_id == user.id %}outgoing{% else %}incoming{% endif %}">
+                                {{ '↑ Sent' if email.sender_id == user.id else '↓ Received' }}
+                            </span>
+                        </td>
+                        <td class="col-user">
+                            <div class="user-cell">
+                                <span class="table-avatar small">{{ email.sender_name[:2]|upper }}</span>
+                                {{ email.sender_name }}
+                            </div>
+                        </td>
+                        <td class="col-user">
+                            <div class="user-cell">
+                                <span class="table-avatar small">{{ email.receiver_name[:2]|upper }}</span>
+                                {{ email.receiver_name }}
+                            </div>
+                        </td>
+                        <td class="col-subject">{{ email.subject }}</td>
+                        <td class="col-date">{{ email.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <span class="empty-icon">📭</span>
+                <p>No emails found for this user</p>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock %}

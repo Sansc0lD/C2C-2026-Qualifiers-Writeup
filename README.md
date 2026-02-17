@@ -17,33 +17,37 @@ For a detailed walkthrough, please refer to the full PDF write-up included in th
 ### 🔗 Blockchain
 | Challenge | Vulnerability / Technique | Script |
 | :--- | :--- | :--- |
-| **tge** | State Manipulation (Snapshot Logic Flaw) | [solve.py](./Blockchain/tge/solve.py) |
-| **Convergence** | Logic Error in Array Sum Validation | [solve.py](./Blockchain/Convergence/solve.py) |
+| **tge** | State Manipulation (Snapshot Logic Flaw) | [exploit.py](./Blockchain/tge/exploit.py) |
+| **Convergence** | Logic Error in Array Sum Validation | [exploit.py](./Blockchain/Convergence/expoit.py) |
 | **nexus** | ERC4626 Inflation/Donation Attack | [exploit.py](./Blockchain/nexus/exploit.py) |
 
 ### 🔍 Forensic
 | Challenge | Vulnerability / Technique | Script |
 | :--- | :--- | :--- |
 | **Log** | Blind SQL Injection Log Analysis (Regex) | [log_parser.py](./Forensic/Log/log_parser.py) |
-| **Tattletale** | Linux Keylogger (`input_event` struct) & OpenSSL Decryption | [parse_keys.py](./Forensic/Tattletale/parse_keys.py) |
+| **Tattletale** | Linux Keylogger (`input_event` struct) & OpenSSL Decryption | [recover.py](./Forensic/Tattletale/recover.py) [solver.py](./Forensic/Tattletale/solver.py) |
+
+### 🎮 Misc
+| Challenge | Vulnerability / Technique | Script |
+| :--- | :--- | :--- |
+| **JinJail** | Python/Jinja2 Sandbox Escape via `numpy.f2py` | [payload.txt](./Misc/JinJail/payload.txt) |
 
 ### 🛡️ Pwn
 | Challenge | Vulnerability / Technique | Script |
 | :--- | :--- | :--- |
-| **ns3** | Arbitrary File Write to `/proc/self/mem` & Shellcode Injection | [exploit.py](./Pwn/ns3/exploit.py) |
+| **ns3** | Arbitrary File Write to `/proc/self/mem` & Shellcode Injection | [exploit.py](./Pwn/ns3/src/exploit.py) |
 
 ### ⚙️ Reverse Engineering
 | Challenge | Vulnerability / Technique | Script |
 | :--- | :--- | :--- |
-| **bunaken** | JS Obfuscation (Bun Runtime) & AES-CBC Decryption | [decrypt.py](./Reverse-Engineering/bunaken/decrypt.py) |
+| **bunaken** | JS Obfuscation (Bun Runtime) & AES-CBC Decryption | [extractor.js](./Reverse-Engineering/bunaken/extractor.js) [solver.py](./Reverse-Engineering/bunaken/solver.py) |
 
 ### 🌐 Web Exploitation
 | Challenge | Vulnerability / Technique | Script |
 | :--- | :--- | :--- |
-| **Misc: JinJail** | Python/Jinja2 Sandbox Escape via `numpy.f2py` | [payload.txt](./Misc/JinJail/payload.txt) |
 | **corp-mail** | Python Format String Injection & JWT Forgery (HS256) | [forge_jwt.py](./Web/corp-mail/forge_jwt.py) |
-| **clicker** | JKU Parser Logic Flaw & Curl Globbing Bypass | [gen_jwks.py](./Web/clicker/gen_jwks.py) |
-| **Soldier of God** | SSTI (Go Templates) & Integer Truncation (64-bit to 32-bit) | [payload.sh](./Web/The-Soldier-of-God-Rick/payload.sh) |
+| **clicker** | JKU Parser Logic Flaw & Curl Globbing Bypass | [forge_jwt.py](./Web/clicker/forge_jwt.py) |
+| **Soldier of God** | SSTI (Go Templates) & Integer Truncation (64-bit to 32-bit) | [payload.txt](./Web/The-Soldier-of-God-Rick/payload.txt) |
 
 ---
 
@@ -66,3 +70,16 @@ To reproduce the Python scripts, install the required dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
+
+## Common Requirements:
+- web3 (Blockchain challenges)
+- pwntools (Pwn challenges)
+- pycryptodome (Crypto/Forensic challenges)
+- requests (Web challenges)
+- PyJWT (Web challenges)
+
+*Note: The challenge bunaken requires the Bun runtime to execute the JavaScript extraction script.*
+
+## ⚠️ Disclaimer
+These scripts are for educational purposes and were created specifically for the C2C 2026 CTF competition. Use them responsibly.

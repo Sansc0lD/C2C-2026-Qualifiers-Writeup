@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click Quest - Play</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Press Start 2P', monospace;
+            background: #0f0e17;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #fffffe;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.08) 2px,
+                    rgba(0, 0, 0, 0.08) 4px
+                );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .header {
+            background: #1a1a2e;
+            border-bottom: 4px solid #e6e600;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 16px;
+            color: #e6e600;
+            text-shadow: 2px 2px 0 #b3b300;
+            letter-spacing: 2px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info span {
+            font-size: 8px;
+            color: #7f5af0;
+        }
+
+        .logout-btn {
+            background: transparent;
+            color: #e53170;
+            border: 3px solid #e53170;
+            padding: 8px 14px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            letter-spacing: 1px;
+        }
+
+        .logout-btn:hover {
+            background: #e53170;
+            color: #0f0e17;
+        }
+
+        .game-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            position: relative;
+        }
+
+        .game-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stats {
+            background: #1a1a2e;
+            border: 4px solid #2cb67d;
+            padding: 20px 50px;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .stats::before {
+            content: 'SCORE';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a2e;
+            padding: 0 12px;
+            font-size: 8px;
+            color: #2cb67d;
+            letter-spacing: 2px;
+        }
+
+        .stats h2 {
+            color: #e6e600;
+            font-size: 42px;
+            text-shadow: 3px 3px 0 #b3b300, 0 0 20px rgba(230, 230, 0, 0.3);
+        }
+
+        .stats p {
+            color: #72757e;
+            font-size: 7px;
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
+
+        .click-area {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .click-area:active .click-image {
+            transform: scale(0.95);
+            filter: brightness(1.3);
+        }
+
+        .click-image {
+            width: 400px;
+            height: 400px;
+            object-fit: contain;
+            display: block;
+            transition: transform 0.1s, filter 0.1s;
+            border: 4px solid #7f5af0;
+            box-shadow: 0 0 30px rgba(127, 90, 240, 0.25);
+            image-rendering: auto;
+        }
+
+        .click-effect {
+            position: absolute;
+            color: #e6e600;
+            font-size: 16px;
+            font-family: 'Press Start 2P', monospace;
+            pointer-events: none;
+            animation: pixelFloat 0.8s ease-out forwards;
+            text-shadow: 2px 2px 0 #b3b300;
+            z-index: 10;
+        }
+
+        @keyframes pixelFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-30px) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-60px) scale(0.8);
+            }
+        }
+
+        .loading {
+            text-align: center;
+            color: #72757e;
+            font-size: 10px;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .leaderboard {
+            background: #1a1a2e;
+            border: 4px solid #e6e600;
+            padding: 20px;
+            min-width: 280px;
+            max-width: 320px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .leaderboard::before {
+            content: 'HIGH SCORES';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a2e;
+            padding: 0 12px;
+            font-size: 8px;
+            color: #e6e600;
+            letter-spacing: 2px;
+            white-space: nowrap;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 8px;
+            border-bottom: 2px solid #222240;
+            font-size: 9px;
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .leaderboard-item:first-child .leaderboard-rank {
+            color: #e6e600;
+            text-shadow: 0 0 8px rgba(230, 230, 0, 0.4);
+        }
+
+        .leaderboard-item:nth-child(2) .leaderboard-rank {
+            color: #c0c0c0;
+        }
+
+        .leaderboard-item:nth-child(3) .leaderboard-rank {
+            color: #cd7f32;
+        }
+
+        .leaderboard-rank {
+            color: #7f5af0;
+            margin-right: 12px;
+            min-width: 30px;
+        }
+
+        .leaderboard-username {
+            flex: 1;
+            color: #fffffe;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .leaderboard-clicks {
+            color: #2cb67d;
+            margin-left: 12px;
+            text-shadow: 0 0 8px rgba(44, 182, 125, 0.3);
+        }
+
+        .combo-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: #e53170;
+            text-shadow: 0 0 15px rgba(229, 49, 112, 0.5);
+            opacity: 0;
+            transition: opacity 0.2s;
+            letter-spacing: 2px;
+            z-index: 100;
+        }
+
+        .combo-indicator.active {
+            opacity: 1;
+            animation: comboPulse 0.3s ease-out;
+        }
+
+        @keyframes comboPulse {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.3); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        @media (max-width: 900px) {
+            .leaderboard {
+                position: static;
+                max-width: 100%;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            .game-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>CLICK QUEST</h1>
+        <div class="user-info">
+            <span id="username"></span>
+            <button class="logout-btn" onclick="logout()">QUIT</button>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <div class="leaderboard">
+            <ul class="leaderboard-list" id="leaderboard-list">
+                <li class="leaderboard-item"><span class="loading">LOADING...</span></li>
+            </ul>
+        </div>
+
+        <div class="game-center">
+            <div class="stats">
+                <h2 id="click-count">0</h2>
+                <p>TOTAL CLICKS</p>
+            </div>
+
+            <div class="click-area" id="click-area">
+                <img src="/static/mambo.jpg" alt="Click me!" class="click-image" id="click-image">
+            </div>
+
+            <div class="loading" id="loading">LOADING GAME...</div>
+        </div>
+    </div>
+
+    <div class="combo-indicator" id="combo">COMBO x1</div>
+
+    <audio id="click-sound" preload="auto"></audio>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const username = localStorage.getItem('username');
+
+        if (!token) {
+            window.location.href = '/';
+        }
+
+        document.getElementById('username').textContent = username ? username.toUpperCase() : '';
+
+        let clickCount = 0;
+        let gameConfig = null;
+        let comboCount = 0;
+        let comboTimer = null;
+
+        async function loadGameConfig() {
+            try {
+                const response = await fetch('/api/game-config', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    gameConfig = await response.json();
+                    document.getElementById('click-image').src = gameConfig.image_url;
+                    document.getElementById('click-sound').src = gameConfig.audio_url;
+                    document.getElementById('loading').style.display = 'none';
+                } else {
+                    console.error('Failed to load game config');
+                }
+            } catch (error) {
+                console.error('Error loading game config:', error);
+            }
+        }
+
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/stats', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    clickCount = data.clicks;
+                    document.getElementById('click-count').textContent = clickCount.toLocaleString();
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        async function loadLeaderboard() {
+            try {
+                const response = await fetch('/api/leaderboard', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const leaderboardList = document.getElementById('leaderboard-list');
+                    leaderboardList.innerHTML = '';
+
+                    data.forEach((player, index) => {
+                        const li = document.createElement('li');
+                        li.className = 'leaderboard-item';
+
+                        const rank = document.createElement('span');
+                        rank.className = 'leaderboard-rank';
+                        rank.textContent = '#' + (index + 1);
+
+                        const name = document.createElement('span');
+                        name.className = 'leaderboard-username';
+                        name.textContent = player.username.toUpperCase();
+
+                        const clicks = document.createElement('span');
+                        clicks.className = 'leaderboard-clicks';
+                        clicks.textContent = player.clicks.toLocaleString();
+
+                        li.appendChild(rank);
+                        li.appendChild(name);
+                        li.appendChild(clicks);
+                        leaderboardList.appendChild(li);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+            }
+        }
+
+        async function handleClick(event) {
+            const clickArea = document.getElementById('click-area');
+            const sound = document.getElementById('click-sound');
+
+            sound.currentTime = 0;
+            sound.play().catch(e => {});
+
+            // Combo system
+            comboCount++;
+            clearTimeout(comboTimer);
+            comboTimer = setTimeout(() => { comboCount = 0; updateCombo(); }, 1200);
+            updateCombo();
+
+            const effect = document.createElement('div');
+            effect.className = 'click-effect';
+            effect.textContent = '+1';
+            effect.style.left = `${event.offsetX}px`;
+            effect.style.top = `${event.offsetY}px`;
+            clickArea.appendChild(effect);
+
+            setTimeout(() => effect.remove(), 800);
+
+            try {
+                const response = await fetch('/api/click', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    clickCount = data.clicks;
+                    document.getElementById('click-count').textContent = clickCount.toLocaleString();
+                    loadLeaderboard();
+                } else if (response.status === 401) {
+                    alert('Session expired. Please login again.');
+                    logout();
+                }
+            } catch (error) {
+                console.error('Error recording click:', error);
+            }
+        }
+
+        function updateCombo() {
+            const el = document.getElementById('combo');
+            if (comboCount >= 3) {
+                el.textContent = `COMBO x${comboCount}`;
+                el.classList.add('active');
+            } else {
+                el.classList.remove('active');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('is_admin');
+            document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            window.location.href = '/';
+        }
+
+        document.getElementById('click-area').addEventListener('click', handleClick);
+
+        loadGameConfig();
+        loadStats();
+        loadLeaderboard();
+    </script>
+</body>
+</html>

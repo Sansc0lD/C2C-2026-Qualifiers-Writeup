@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="settings-container">
+    <div class="settings-header">
+        <h1 class="page-title">Email Settings</h1>
+        <p class="page-subtitle">Configure your email preferences</p>
+    </div>
+
+    <div class="settings-grid">
+        <section class="panel signature-panel">
+            <div class="panel-header">
+                <h2 class="panel-title">
+                    <span class="panel-icon">✎</span>
+                    Email Signature
+                </h2>
+            </div>
+            <div class="panel-content">
+                <form method="POST" class="settings-form">
+                    <div class="form-group">
+                        <label for="signature" class="form-label">Your Signature</label>
+                        <textarea id="signature" name="signature" class="form-textarea" 
+                                  rows="5" maxlength="500" 
+                                  placeholder="Best regards,&#10;{username}&#10;Corporation Inc.">{{ user.signature }}</textarea>
+                        <span class="form-hint">Max 500 characters. Appended to all outgoing emails.</span>
+                    </div>
+
+                    <div class="template-help">
+                        <h4>Template Variables</h4>
+                        <p>Use these variables in your signature:</p>
+                        <ul class="variable-list">
+                            <li><code>{username}</code> - Your username</li>
+                            <li><code>{date}</code> - Current date</li>
+                        </ul>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Save Signature
+                    </button>
+                </form>
+
+                {% if user.signature %}
+                <div class="signature-preview">
+                    <h4>Current Signature</h4>
+                    <div class="preview-box">
+                        <pre class="preview-text">{{ user.signature }}</pre>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="panel info-panel">
+            <div class="panel-header">
+                <h2 class="panel-title">
+                    <span class="panel-icon">◈</span>
+                    Account Info
+                </h2>
+            </div>
+            <div class="panel-content">
+                <div class="info-row">
+                    <span class="info-label">Username</span>
+                    <span class="info-value">{{ current_user.username }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">{{ user.email }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Account Type</span>
+                    <span class="info-value">{{ 'Administrator' if current_user.is_admin else 'Standard User' }}</span>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

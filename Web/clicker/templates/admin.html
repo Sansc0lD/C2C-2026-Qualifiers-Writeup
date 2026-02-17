@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click Quest - Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Press Start 2P', monospace;
+            background: #0f0e17;
+            min-height: 100vh;
+            color: #fffffe;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.08) 2px,
+                    rgba(0, 0, 0, 0.08) 4px
+                );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .header {
+            background: #1a1a2e;
+            border-bottom: 4px solid #e53170;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 14px;
+            color: #e53170;
+            text-shadow: 2px 2px 0 #a11a4e;
+            letter-spacing: 2px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn, .logout-btn {
+            background: transparent;
+            border: 3px solid;
+            padding: 8px 14px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            cursor: pointer;
+            transition: all 0.15s;
+            letter-spacing: 1px;
+        }
+
+        .back-btn {
+            color: #2cb67d;
+            border-color: #2cb67d;
+        }
+
+        .back-btn:hover {
+            background: #2cb67d;
+            color: #0f0e17;
+        }
+
+        .logout-btn {
+            color: #e53170;
+            border-color: #e53170;
+        }
+
+        .logout-btn:hover {
+            background: #e53170;
+            color: #0f0e17;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: #1a1a2e;
+            border: 4px solid #333;
+            padding: 28px 24px;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .card h2 {
+            color: #e6e600;
+            font-size: 11px;
+            margin-bottom: 22px;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0 #b3b300;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #72757e;
+            font-size: 7px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 3px solid #333;
+            background: #12121f;
+            color: #fffffe;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            outline: none;
+            transition: border-color 0.2s;
+            -webkit-appearance: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #7f5af0;
+            box-shadow: 0 0 15px rgba(127, 90, 240, 0.15);
+        }
+
+        input::placeholder {
+            color: #3a3a52;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: #12121f;
+            color: #fffffe;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            font-size: 8px;
+        }
+
+        input[type="file"]::file-selector-button {
+            background: #7f5af0;
+            color: #fffffe;
+            border: none;
+            padding: 8px 14px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            cursor: pointer;
+            margin-right: 12px;
+        }
+
+        button[type="submit"] {
+            padding: 14px 24px;
+            background: #2cb67d;
+            color: #0f0e17;
+            border: none;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.15s;
+            box-shadow: 0 4px 0 #1a8a5c;
+            position: relative;
+            top: 0;
+        }
+
+        button[type="submit"]:hover {
+            background: #3dd68e;
+            box-shadow: 0 6px 0 #1a8a5c;
+            top: -2px;
+        }
+
+        button[type="submit"]:active {
+            top: 4px;
+            box-shadow: 0 0 0 #1a8a5c;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 8px;
+            line-height: 1.6;
+            display: none;
+            border: 3px solid;
+        }
+
+        .message.success {
+            background: #162b23;
+            color: #2cb67d;
+            border-color: #2cb67d;
+        }
+
+        .message.error {
+            background: #2b1621;
+            color: #e53170;
+            border-color: #e53170;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 22px;
+            gap: 4px;
+        }
+
+        .tab {
+            padding: 12px 18px;
+            cursor: pointer;
+            color: #555;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            background: #12121f;
+            border: 3px solid #333;
+            transition: all 0.15s;
+            letter-spacing: 1px;
+        }
+
+        .tab:hover {
+            color: #aaa;
+            border-color: #555;
+        }
+
+        .tab.active {
+            color: #7f5af0;
+            border-color: #7f5af0;
+            background: #1c1635;
+            text-shadow: 0 0 10px rgba(127, 90, 240, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .divider {
+            border: none;
+            border-top: 2px dashed #222240;
+            margin: 24px 0;
+        }
+
+        .status-bar {
+            text-align: center;
+            padding: 10px;
+            font-size: 7px;
+            color: #3a3a52;
+            letter-spacing: 1px;
+            border-top: 2px solid #222240;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>ADMIN PANEL</h1>
+        <div class="header-right">
+            <button class="back-btn" onclick="window.location.href='/game'">GAME</button>
+            <button class="logout-btn" onclick="logout()">QUIT</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>SELECT ACTIVE FILES</h2>
+            <div id="message" class="message"></div>
+
+            <div class="form-group">
+                <label>CLICK IMAGE</label>
+                <select id="image-select" onchange="selectFile('image')">
+                    <option value="">LOADING...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>CLICK AUDIO</label>
+                <select id="audio-select" onchange="selectFile('audio')">
+                    <option value="">LOADING...</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>MANAGE FILES</h2>
+
+            <div class="tabs">
+                <div class="tab active" onclick="showManageTab('upload')">UPLOAD</div>
+                <div class="tab" onclick="showManageTab('download')">DOWNLOAD URL</div>
+            </div>
+
+            <div id="upload-tab" class="tab-content active">
+                <form onsubmit="uploadFile(event)">
+                    <div class="form-group">
+                        <label>FILE TYPE</label>
+                        <select id="upload-type">
+                            <option value="image">IMAGE</option>
+                            <option value="audio">AUDIO</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>TITLE</label>
+                        <input type="text" id="upload-title" placeholder="MY IMAGE" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>SELECT FILE (MAX 1.5MB)</label>
+                        <input type="file" id="upload-file" required>
+                    </div>
+
+                    <button type="submit">UPLOAD FILE</button>
+                </form>
+            </div>
+
+            <div id="download-tab" class="tab-content">
+                <form onsubmit="downloadFile(event)">
+                    <div class="form-group">
+                        <label>FILE TYPE</label>
+                        <select id="download-type">
+                            <option value="image">IMAGE</option>
+                            <option value="audio">AUDIO</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>TITLE</label>
+                        <input type="text" id="download-title" placeholder="MY IMAGE" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>FILE URL</label>
+                        <input type="text" id="download-url" placeholder="HTTPS://..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>SAVE AS FILENAME</label>
+                        <input type="text" id="download-filename" placeholder="FILE.PNG" required>
+                    </div>
+
+                    <button type="submit">DOWNLOAD FILE</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="status-bar">ADMIN MODE ACTIVE</div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const isAdmin = localStorage.getItem('is_admin') === 'true';
+
+        if (!token || !isAdmin) {
+            window.location.href = '/';
+        }
+
+        function showMessage(message, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = message;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        }
+
+        function showManageTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            if (tab === 'upload') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('upload-tab').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('download-tab').classList.add('active');
+            }
+        }
+
+        async function loadFiles() {
+            try {
+                const imageResponse = await fetch('/api/admin/files?type=image', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const audioResponse = await fetch('/api/admin/files?type=audio', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const images = await imageResponse.json();
+                const audios = await audioResponse.json();
+
+                const imageSelect = document.getElementById('image-select');
+                imageSelect.innerHTML = '<option value="">-- SELECT IMAGE --</option>';
+                images.forEach(img => {
+                    const option = document.createElement('option');
+                    option.value = img.id;
+                    option.textContent = img.title;
+                    imageSelect.appendChild(option);
+                });
+
+                const audioSelect = document.getElementById('audio-select');
+                audioSelect.innerHTML = '<option value="">-- SELECT AUDIO --</option>';
+                audios.forEach(aud => {
+                    const option = document.createElement('option');
+                    option.value = aud.id;
+                    option.textContent = aud.title;
+                    audioSelect.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error('Error loading files:', error);
+            }
+        }
+
+        async function selectFile(type) {
+            const selectId = type === 'image' ? 'image-select' : 'audio-select';
+            const fileId = document.getElementById(selectId).value;
+
+            if (!fileId) return;
+
+            try {
+                const response = await fetch('/api/admin/select-file', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ file_id: fileId, type })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage(`${type.toUpperCase()} SELECTED`, 'success');
+                } else {
+                    showMessage(data.message || 'SELECTION FAILED', 'error');
+                }
+            } catch (error) {
+                showMessage('AN ERROR OCCURRED', 'error');
+            }
+        }
+
+        async function uploadFile(event) {
+            event.preventDefault();
+
+            const fileInput = document.getElementById('upload-file');
+            const fileType = document.getElementById('upload-type').value;
+            const title = document.getElementById('upload-title').value;
+
+            if (!fileInput.files || !fileInput.files[0]) {
+                showMessage('PLEASE SELECT A FILE', 'error');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            if (file.size > 1.5 * 1024 * 1024) {
+                showMessage('FILE TOO LARGE (MAX 1.5MB)', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('type', fileType);
+            formData.append('title', title);
+
+            try {
+                const response = await fetch('/api/admin/upload', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage('FILE UPLOADED', 'success');
+                    fileInput.value = '';
+                    document.getElementById('upload-title').value = '';
+                    loadFiles();
+                } else {
+                    showMessage(data.message || 'UPLOAD FAILED', 'error');
+                }
+            } catch (error) {
+                showMessage('UPLOAD ERROR', 'error');
+            }
+        }
+
+        async function downloadFile(event) {
+            event.preventDefault();
+
+            const url = document.getElementById('download-url').value;
+            const filename = document.getElementById('download-filename').value;
+            const fileType = document.getElementById('download-type').value;
+            const title = document.getElementById('download-title').value;
+
+            try {
+                const response = await fetch('/api/admin/download', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url, filename, type: fileType, title })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage('FILE DOWNLOADED', 'success');
+                    document.getElementById('download-url').value = '';
+                    document.getElementById('download-filename').value = '';
+                    document.getElementById('download-title').value = '';
+                    loadFiles();
+                } else {
+                    showMessage(data.message || 'DOWNLOAD FAILED', 'error');
+                }
+            } catch (error) {
+                showMessage('DOWNLOAD ERROR', 'error');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('is_admin');
+            document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            window.location.href = '/';
+        }
+
+        loadFiles();
+    </script>
+</body>
+</html>

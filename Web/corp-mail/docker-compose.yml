@@ -1,0 +1,8 @@
+services:
+  app:
+    build: .
+    container_name: corpmail
+    ports:
+      - "9090:80"
+    environment:
+      - FLASK_ENV=production

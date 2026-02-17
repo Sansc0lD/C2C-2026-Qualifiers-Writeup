@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Compose{% endblock %}
+
+{% block content %}
+<div class="email-container">
+    <div class="email-header">
+        <h1 class="page-title">Compose Email</h1>
+        <p class="page-subtitle">Send a new message</p>
+    </div>
+
+    <section class="panel compose-panel">
+        <div class="panel-content">
+            <form method="POST" class="compose-form">
+                <div class="form-group">
+                    <label for="receiver_id" class="form-label">To</label>
+                    <select id="receiver_id" name="receiver_id" class="form-select" required>
+                        <option value="">Select recipient...</option>
+                        {% for user in users %}
+                        <option value="{{ user.id }}">{{ user.username }} ({{ user.email }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="subject" class="form-label">Subject</label>
+                    <input type="text" id="subject" name="subject" class="form-input" placeholder="Enter subject"
+                        required maxlength="200">
+                </div>
+
+                <div class="form-group">
+                    <label for="body" class="form-label">Message</label>
+                    <textarea id="body" name="body" class="form-textarea" rows="10" placeholder="Write your message..."
+                        required></textarea>
+                </div>
+
+                {% if signature %}
+                <div class="signature-notice">
+                    <span class="sig-label">Your signature will be appended:</span>
+                    <pre class="sig-preview">--
+{{ signature }}</pre>
+                </div>
+                {% endif %}
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        Send Email
+                    </button>
+                    <a href="{{ url_for('user.inbox') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+{% endblock %}

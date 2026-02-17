@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click Quest - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Press Start 2P', monospace;
+            background: #0f0e17;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.08) 2px,
+                    rgba(0, 0, 0, 0.08) 4px
+                );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .stars {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fff;
+            animation: twinkle 2s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+
+        .container {
+            background: #1a1a2e;
+            border: 4px solid #e6e600;
+            box-shadow:
+                0 0 0 4px #0f0e17,
+                0 0 0 8px #e6e600,
+                0 0 40px rgba(230, 230, 0, 0.15),
+                inset 0 0 60px rgba(0, 0, 0, 0.3);
+            padding: 40px 35px;
+            width: 100%;
+            max-width: 440px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            text-align: center;
+            color: #e6e600;
+            margin-bottom: 8px;
+            font-size: 22px;
+            text-shadow: 3px 3px 0 #b3b300, 0 0 20px rgba(230, 230, 0, 0.4);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f5af0;
+            margin-bottom: 30px;
+            font-size: 9px;
+            letter-spacing: 1px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 28px;
+            gap: 4px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            color: #555;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            background: #12121f;
+            border: 3px solid #333;
+            transition: all 0.15s;
+            letter-spacing: 1px;
+        }
+
+        .tab:hover {
+            color: #aaa;
+            border-color: #555;
+        }
+
+        .tab.active {
+            color: #2cb67d;
+            border-color: #2cb67d;
+            background: #162b23;
+            text-shadow: 0 0 10px rgba(44, 182, 125, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #72757e;
+            font-size: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 12px;
+            border: 3px solid #333;
+            background: #12121f;
+            color: #fffffe;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: #7f5af0;
+            box-shadow: 0 0 15px rgba(127, 90, 240, 0.2);
+        }
+
+        input::placeholder {
+            color: #3a3a52;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 16px;
+            background: #2cb67d;
+            color: #0f0e17;
+            border: none;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.15s;
+            box-shadow: 0 4px 0 #1a8a5c;
+            position: relative;
+            top: 0;
+        }
+
+        button[type="submit"]:hover {
+            background: #3dd68e;
+            box-shadow: 0 6px 0 #1a8a5c;
+            top: -2px;
+        }
+
+        button[type="submit"]:active {
+            top: 4px;
+            box-shadow: 0 0 0 #1a8a5c;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 8px;
+            line-height: 1.6;
+            display: none;
+            border: 3px solid;
+        }
+
+        .message.success {
+            background: #162b23;
+            color: #2cb67d;
+            border-color: #2cb67d;
+        }
+
+        .message.error {
+            background: #2b1621;
+            color: #e53170;
+            border-color: #e53170;
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .pixel-decoration {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .corner-decoration {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #e6e600;
+        }
+        .corner-decoration.tl { top: -8px; left: -8px; }
+        .corner-decoration.tr { top: -8px; right: -8px; }
+        .corner-decoration.bl { bottom: -8px; left: -8px; }
+        .corner-decoration.br { bottom: -8px; right: -8px; }
+
+        .blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .footer-text {
+            text-align: center;
+            color: #3a3a52;
+            font-size: 7px;
+            margin-top: 24px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <div class="corner-decoration tl"></div>
+        <div class="corner-decoration tr"></div>
+        <div class="corner-decoration bl"></div>
+        <div class="corner-decoration br"></div>
+
+        <div class="pixel-decoration">
+            <span style="color:#e6e600">*</span>
+            <span style="color:#7f5af0">*</span>
+            <span style="color:#2cb67d">*</span>
+        </div>
+
+        <h1>CLICK QUEST</h1>
+        <p class="subtitle">- INSERT COIN TO PLAY -</p>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('login')">LOGIN</div>
+            <div class="tab" onclick="showTab('register')">REGISTER</div>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div id="login-form" class="form-container active">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>PLAYER NAME</label>
+                    <input type="text" id="login-username" required placeholder="...">
+                </div>
+                <div class="form-group">
+                    <label>PASSWORD</label>
+                    <input type="password" id="login-password" required placeholder="...">
+                </div>
+                <button type="submit">START GAME<span class="blink">_</span></button>
+            </form>
+        </div>
+
+        <div id="register-form" class="form-container">
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>PLAYER NAME</label>
+                    <input type="text" id="register-username" required minlength="3" placeholder="...">
+                </div>
+                <div class="form-group">
+                    <label>PASSWORD</label>
+                    <input type="password" id="register-password" required minlength="6" placeholder="...">
+                </div>
+                <div class="form-group">
+                    <label>CONFIRM PASSWORD</label>
+                    <input type="password" id="register-confirm" required placeholder="...">
+                </div>
+                <button type="submit">CREATE PLAYER<span class="blink">_</span></button>
+            </form>
+        </div>
+
+        <div class="footer-text">PRESS START 2P &copy; 2026</div>
+    </div>
+
+    <script>
+        // Generate starfield
+        (function() {
+            const stars = document.getElementById('stars');
+            for (let i = 0; i < 80; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                star.style.animationDuration = (1 + Math.random() * 2) + 's';
+                const size = Math.random() > 0.7 ? 4 : 2;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                stars.appendChild(star);
+            }
+        })();
+
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
+
+            if (tab === 'login') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('login-form').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('register-form').classList.add('active');
+            }
+
+            hideMessage();
+        }
+
+        function showMessage(message, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = message;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+        }
+
+        function hideMessage() {
+            document.getElementById('message').style.display = 'none';
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('username', data.username);
+                    localStorage.setItem('is_admin', data.is_admin);
+
+                    if (data.is_admin) {
+                        window.location.href = '/admin';
+                    } else {
+                        window.location.href = '/game';
+                    }
+                } else {
+                    showMessage(data.message || 'Login failed', 'error');
+                }
+            } catch (error) {
+                showMessage('An error occurred. Please try again.', 'error');
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            const confirm = document.getElementById('register-confirm').value;
+
+            if (password !== confirm) {
+                showMessage('Passwords do not match', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage('Registration successful! Please login.', 'success');
+                    setTimeout(() => { showTab('login'); }, 1500);
+                } else {
+                    showMessage(data.message || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                showMessage('An error occurred. Please try again.', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

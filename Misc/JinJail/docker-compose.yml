@@ -1,0 +1,13 @@
+services:
+  misc-flaskjail:
+    build: .
+    ports:
+      - 32811:13337
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+        reservations:
+          cpus: "0.25"
+          memory: "128M"

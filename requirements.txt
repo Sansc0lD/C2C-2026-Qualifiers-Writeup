@@ -1,0 +1,6 @@
+web3
+pwntools
+pycryptodome
+requests
+PyJWT
+numpy

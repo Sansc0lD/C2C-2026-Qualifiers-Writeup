@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CorpMail{% endblock %} | Internal Email</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    {% if current_user %}
+    <nav class="navbar">
+        <div class="nav-brand">
+            <span class="brand-icon">✉</span>
+            <span class="brand-text">CorpMail</span>
+        </div>
+        <div class="nav-links">
+            {% if current_user.is_admin %}
+                <a href="{{ url_for('admin.inbox') }}" class="nav-link {% if request.endpoint == 'admin.inbox' %}active{% endif %}">
+                    <span class="nav-icon">📥</span> Inbox
+                </a>
+                <a href="{{ url_for('admin.sent') }}" class="nav-link {% if request.endpoint == 'admin.sent' %}active{% endif %}">
+                    <span class="nav-icon">📤</span> Sent
+                </a>
+                <a href="{{ url_for('admin.compose') }}" class="nav-link {% if request.endpoint == 'admin.compose' %}active{% endif %}">
+                    <span class="nav-icon">✏</span> Compose
+                </a>
+                <a href="{{ url_for('admin.panel') }}" class="nav-link {% if request.endpoint == 'admin.panel' %}active{% endif %}">
+                    <span class="nav-icon">👥</span> Users
+                </a>
+                <a href="{{ url_for('user.settings') }}" class="nav-link {% if request.endpoint == 'user.settings' %}active{% endif %}">
+                    <span class="nav-icon">⚙</span> Settings
+                </a>
+            {% else %}
+                <a href="{{ url_for('user.inbox') }}" class="nav-link {% if request.endpoint == 'user.inbox' %}active{% endif %}">
+                    <span class="nav-icon">📥</span> Inbox
+                </a>
+                <a href="{{ url_for('user.sent') }}" class="nav-link {% if request.endpoint == 'user.sent' %}active{% endif %}">
+                    <span class="nav-icon">📤</span> Sent
+                </a>
+                <a href="{{ url_for('user.compose') }}" class="nav-link {% if request.endpoint == 'user.compose' %}active{% endif %}">
+                    <span class="nav-icon">✏</span> Compose
+                </a>
+                <a href="{{ url_for('user.settings') }}" class="nav-link {% if request.endpoint == 'user.settings' %}active{% endif %}">
+                    <span class="nav-icon">⚙</span> Settings
+                </a>
+            {% endif %}
+        </div>
+        <div class="nav-user">
+            <span class="user-badge {% if current_user.is_admin %}admin{% endif %}">
+                {{ current_user.username[:2]|upper }}
+            </span>
+            <span class="user-name">{{ current_user.username }}</span>
+            <a href="{{ url_for('auth.logout') }}" class="logout-btn">Sign Out</a>
+        </div>
+    </nav>
+    {% endif %}
+
+    <main class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">
+                            <span>{{ message }}</span>
+                            <button class="flash-close" onclick="this.parentElement.remove()">×</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <span class="footer-text">CorpMail v3.2.1 | Internal Use Only | © 2026 Corporation</span>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

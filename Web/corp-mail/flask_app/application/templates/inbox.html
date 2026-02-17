@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Inbox{% endblock %}
+
+{% block content %}
+<div class="email-container">
+    <div class="email-header">
+        <h1 class="page-title">Inbox</h1>
+        <p class="page-subtitle">{{ unread_count }} unread message{% if unread_count != 1 %}s{% endif %}</p>
+    </div>
+
+    <section class="panel email-list-panel">
+        <div class="panel-content">
+            {% if emails %}
+            <table class="email-table">
+                <thead>
+                    <tr>
+                        <th class="col-status"></th>
+                        <th class="col-from">From</th>
+                        <th class="col-subject">Subject</th>
+                        <th class="col-date">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for email in emails %}
+                    <tr class="{% if not email.is_read %}unread{% endif %}"
+                        onclick="window.location='{{ url_for('user.view_email', email_id=email.id) }}'">
+                        <td class="col-status">
+                            {% if not email.is_read %}
+                            <span class="unread-dot">●</span>
+                            {% endif %}
+                        </td>
+                        <td class="col-from">
+                            <div class="sender-info">
+                                <span class="sender-avatar">{{ email.sender_name[:2]|upper }}</span>
+                                <span class="sender-name">{{ email.sender_name }}</span>
+                            </div>
+                        </td>
+                        <td class="col-subject">{{ email.subject }}</td>
+                        <td class="col-date">{{ email.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <span class="empty-icon">📭</span>
+                <p>Your inbox is empty</p>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock %}
