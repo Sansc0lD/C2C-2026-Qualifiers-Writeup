@@ -18,7 +18,7 @@ For a detailed walkthrough, please refer to the full PDF write-up included in th
 | Challenge | Vulnerability / Technique | Script |
 | :--- | :--- | :--- |
 | **tge** | State Manipulation (Snapshot Logic Flaw) | [exploit.py](./Blockchain/tge/exploit.py) |
-| **Convergence** | Logic Error in Array Sum Validation | [exploit.py](./Blockchain/Convergence/expoit.py) |
+| **Convergence** | Logic Error in Array Sum Validation | [exploit.py](./Blockchain/Convergence/exploit.py) |
 | **nexus** | ERC4626 Inflation/Donation Attack | [exploit.py](./Blockchain/nexus/exploit.py) |
 
 ### 🔍 Forensic
