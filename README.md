@@ -56,7 +56,7 @@ In compliance with the C2C 2026 rules regarding AI Transparency, the following d
 * **Subscription Tier:** Google AI Pro Free for Student (via Google for Education)
 
 **Methodology:**
-AI was strictly used as an accelerator, primarily for generating boilerplate code (e.g., `web3.py` connection templates, `pwntools` skeletons) and explaining specific library documentation or obfuscation logic. All exploits were manually verified, debugged, and executed. [cite_start]No flag was submitted blindly from AI output[cite: 20, 21, 22].
+AI was strictly used as an accelerator, primarily for generating boilerplate code (e.g., `web3.py` connection templates, `pwntools` skeletons) and explaining specific library documentation or obfuscation logic. All exploits were manually verified, debugged, and executed. **No flag was submitted blindly from AI output.**
 
 ---
 
